@@ -7,9 +7,12 @@ class GridSpot{
   char entity;
   double value;
   Point action = new Point();
+  char actionChar;
 
   public GridSpot(){
     value = 0;
   }
+  
+ 
 
 }
