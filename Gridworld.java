@@ -86,7 +86,7 @@ class Gridworld{
   }
 
   boolean isTerminal(GridSpot state){
-    if(state.entity == 's' || state.entity == 'e'){
+    if(state.entity == 'b' || state.entity == 'e'){
       return true;
     }
     else{
@@ -105,17 +105,18 @@ class Gridworld{
       }
       
     }
-    printGridValues();
     System.out.println("made it!");
     calculateBestActions();
+    //test();
     
     
   }
   double calculateValues(){
     double delta = 0.0;
-     for(int i = 0; i< numOfColumns; i++){
-      for(int j = 0; j < numOfRows; j++){
-        GridSpot state = grid[i][j];
+     for(int y = 0; y< numOfRows; y++){
+      for(int x = 0; x < numOfColumns; x++){
+        GridSpot state = grid[y][x];
+        
         if(!isTerminal(state)){
           //initialize possible v list
           ArrayList<Double> possible_v = new ArrayList<>();
@@ -124,7 +125,8 @@ class Gridworld{
           double old_v = state.value;
           
           for(Point a : actionList){
-            Point nextState = agent.move(new Point(i,j), a, numOfColumns, numOfRows);
+            Point nextState = new Point();
+            nextState = agent.move(new Point(x,y), a, numOfColumns, numOfRows);
             
             
             int reward = returnReward(nextState);
@@ -149,11 +151,14 @@ class Gridworld{
 
   void calculateBestActions(){
     char[] actionCharArr = {'D', 'U', 'R','L'};
-    for(int i = 0; i< numOfColumns; i++){      
-      for(int j = 0; j < numOfRows; j++){
-        //int i = 0;
-        //int j = 2;
-        GridSpot state = grid[i][j];
+    for(int y = 0; y< numOfRows; y++){      
+      for(int x = 0; x < numOfColumns; x++){
+      
+        System.out.println("\n");
+        System.out.println("state x = " + x + ", y = " + y);
+        
+        GridSpot state = grid[y][x];
+        Point statePoint = new Point(x,y);
         if(!isTerminal(state)){
            //initialize possible v list
           ArrayList<Double> possible_v = new ArrayList<>();
@@ -161,10 +166,12 @@ class Gridworld{
           for(Point a : actionList){
             System.out.print("action: ");
             System.out.println(a);
+            Point nextState = new Point();
+            nextState = agent.move(statePoint, a, numOfColumns, numOfRows);
             
-            Point nextState = agent.move(new Point(i,j), a, numOfColumns, numOfRows);
             System.out.print("next state: ");
             System.out.println(nextState);
+            
             int reward = returnReward(nextState);
             System.out.print("reward: ");
             System.out.println(reward);
@@ -184,9 +191,33 @@ class Gridworld{
           state.action = actionList[index];
           state.actionChar = actionCharArr[index];
         }
-       
       }
-     }
+       
+    }
+  }
+
+  void test(){
+    char[] actionCharArr = {'D', 'U', 'R','L'};
+    System.out.println("\n");
+    System.out.println("state x = " + 1 + ", y = " + 3);
+    Point statePoint = new Point(1,3);
+    for(Point a : actionList){
+            System.out.print("action: ");
+            System.out.println(a);
+            Point nextState = new Point();
+            nextState = agent.move(statePoint, a, numOfColumns, numOfRows);
+            
+            System.out.print("next state: ");
+            System.out.println(nextState);
+      
+            int reward = returnReward(nextState);
+            System.out.print("reward: ");
+            System.out.println(reward);
+
+            double v = reward + gamma * grid[nextState.y][nextState.x].value;
+            System.out.print("value: ");
+            System.out.println(v);
+    }
   }
 
   
