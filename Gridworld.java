@@ -6,9 +6,9 @@ import java.awt.*;
 
 //The Gridworld class holds a blueprint for the gridworld environment that the agent navigates through.
 class Gridworld{
-
-  final int numOfColumns; //width of gridworld
+  
   final int numOfRows; //height  of gridworld
+  final int numOfColumns; //width of gridworld  
   final Point startPos; //starting coordinate of the agent
   final Point goal; //ending coordinate of the agent
   final int numOfBlackHoles; //number of black holes in the grid
@@ -50,14 +50,19 @@ class Gridworld{
     
     agent = new Agent();
   }
+  
 
   //METHODS
+  /*int askUser(int lower limit, int upper limit, String question){
+    System.out.println(question);
+    
+  }*/
   //temp
-  void setBlackHoleLocation(int x, int y){
+  /*void setBlackHoleLocation(int x, int y){
     if(grid[y][x].entity != null){
       //set the location
     }
-  }
+  }*/
   void printGridValues(){
     double[][] gridValues;
     gridValues = new double[numOfRows][numOfColumns];
