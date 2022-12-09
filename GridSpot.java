@@ -6,11 +6,12 @@ import java.awt.*;
 class GridSpot{
   char entity;
   double value;
-  Point action = new Point();
+  Point action;
   char actionChar;
 
   public GridSpot(){
     value = 0;
+    entity = ' ';
   }
   
  

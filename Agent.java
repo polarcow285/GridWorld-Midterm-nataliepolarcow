@@ -1,7 +1,6 @@
 import java.awt.*;
 class Agent{
-  int positionRow;
-  int positionCol;
+  Point position;
   final char display = 'o';
 
   Point move(Point state, Point action, int length, int width){

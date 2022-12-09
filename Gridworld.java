@@ -1,29 +1,33 @@
+import java.util.*;
+
 //import that contains the Point class
 import java.awt.*;
-import java.util.*;  
+  
 
-
+//The Gridworld class holds a blueprint for the gridworld environment that the agent navigates through.
 class Gridworld{
 
-  final int numOfColumns;
-  final int numOfRows;
-  final Point startPos;
-  final Point goal;
-  //final int numOfBlackHoles;
-  GridSpot[][] grid;
-  final static double gamma = 0.9;
-  //down, up, right, left
-  final static Point[] actionList = {new Point(0,1), new Point(0,-1), new Point(1,0), new Point(-1, 0)};
-  Agent agent;
+  final int numOfColumns; //width of gridworld
+  final int numOfRows; //height  of gridworld
+  final Point startPos; //starting coordinate of the agent
+  final Point goal; //ending coordinate of the agent
+  final int numOfBlackHoles; //number of black holes in the grid
+  GridSpot[][] grid; //2d array that represents grid
+  final static double gamma = 0.9; //constant that represents how much the calculations should care about future rewards
+  
+  final static Point[] actionList = {new Point(0,1), new Point(0,-1), new Point(1,0), new Point(-1, 0)}; //list of actions that represent down, up, right, left
+  Agent agent; //the agent is navigating through this gridworld
 
-  public Gridworld(int length, int width, Point start, Point end){
-    numOfColumns = length;
-    numOfRows = width;
+
+  //The constructor initializes a 2d array with the starting position, ending position, and black hole locations in the grid
+  public Gridworld(int height, int width, Point start, Point end, int numBlackHoles){   
+    numOfRows = height;
+    numOfColumns = width;
     startPos = start;
     goal = end;
-    grid = new GridSpot[length][width];
+    grid = new GridSpot[height][width];
     //for each 
-    for(int i = 0; i< length; i++){
+    for(int i = 0; i< height; i++){
       for(int j = 0; j < width; j++){
         grid[i][j] = new GridSpot();
         if(i == end.y && j == end.x){
@@ -34,41 +38,68 @@ class Gridworld{
         }
       }
     }
+    numOfBlackHoles = numBlackHoles;
+    /*for (int k = 0; k<numOfBlackHoles; k++){
+      grid[2][2].entity = 'b';
+    }*/
+    grid[0][0].entity = 'b';
+    grid[1][1].entity = 'b';
+    grid[2][2].entity = 'b';
+    grid[3][3].entity = 'b';
+    
+    
     agent = new Agent();
   }
 
   //METHODS
   //temp
+  void setBlackHoleLocation(int x, int y){
+    if(grid[y][x].entity != null){
+      //set the location
+    }
+  }
   void printGridValues(){
     double[][] gridValues;
-    gridValues = new double[numOfColumns][numOfRows];
-    for(int i = 0; i< numOfColumns; i++){
-      for(int j = 0; j < numOfRows; j++){
+    gridValues = new double[numOfRows][numOfColumns];
+    for(int i = 0; i< numOfRows; i++){
+      for(int j = 0; j < numOfColumns; j++){
         gridValues[i][j] = grid[i][j].value;
       }
     }
-    System.out.println(Arrays.deepToString(gridValues).replace("], ", "]\n"));
+    String strWithOuterBrackets = Arrays.deepToString(gridValues).replace("], ", "]\n");    
+    System.out.println(strWithOuterBrackets.substring(1, strWithOuterBrackets.length()-1));
 
   }
   void printActions(){
     char[][] gridActions;
     
-    gridActions = new char[numOfColumns][numOfRows];
-    for(int i = 0; i< numOfColumns; i++){
-      for(int j = 0; j < numOfRows; j++){
+    gridActions = new char[numOfRows][numOfColumns];
+    for(int i = 0; i< numOfRows; i++){
+      for(int j = 0; j < numOfColumns; j++){
        
         gridActions[i][j] = grid[i][j].actionChar;
       }
     }
-    System.out.println(Arrays.deepToString(gridActions).replace("], ", "]\n"));
+    String strWithOuterBrackets = Arrays.deepToString(gridActions).replace("], ", "]\n");    
+    System.out.println(strWithOuterBrackets.substring(1, strWithOuterBrackets.length()-1));
+
+  }
+  void printEntities(){
+    char[][] gridEntities;
+    
+    gridEntities = new char[numOfRows][numOfColumns];
+    for(int i = 0; i< numOfRows; i++){
+      for(int j = 0; j < numOfColumns; j++){
+       
+        gridEntities[i][j] = grid[i][j].entity;
+      }
+    }
+    String strWithOuterBrackets = Arrays.deepToString(gridEntities).replace("], ", "]\n");    
+    System.out.println(strWithOuterBrackets.substring(1, strWithOuterBrackets.length()-1));
 
   }
 
-  /*static Point[] actionList(){
-    Point[] actions = {new Point(0,1), new Point(0,-1), new Point(1,0), new Point(-1, 0)};
-    return actions;
-  }*/
-  
+  //calculates the reward for hypothetically being in a certain state
   int returnReward(Point nextState){
     GridSpot nextStateSpot = grid[nextState.y][nextState.x];
     //if next state == ending position, then reward is 10
@@ -85,6 +116,7 @@ class Gridworld{
     
   }
 
+  //checks whether a state is a black hole the ending position
   boolean isTerminal(GridSpot state){
     if(state.entity == 'b' || state.entity == 'e'){
       return true;
@@ -95,9 +127,12 @@ class Gridworld{
     
   }
 
+  //method that calculates the values for all the squares and gets the best action to take when in those squares
   void solve(){
 
     boolean converged = false;
+
+    //run calculateValues() until calculations have converged
     while(!converged){
       double delta = calculateValues();
       if (delta < 0.0001){
@@ -106,13 +141,18 @@ class Gridworld{
       
     }
     System.out.println("made it!");
+
+    //calculates best actions to take at each square
     calculateBestActions();
     //test();
     
     
   }
+
+  //calculates each square's value (numbe that represents how good the square is)
   double calculateValues(){
     double delta = 0.0;
+    //iterate through each gridspot on the grid
      for(int y = 0; y< numOfRows; y++){
       for(int x = 0; x < numOfColumns; x++){
         GridSpot state = grid[y][x];
@@ -126,7 +166,7 @@ class Gridworld{
           
           for(Point a : actionList){
             Point nextState = new Point();
-            nextState = agent.move(new Point(x,y), a, numOfColumns, numOfRows);
+            nextState = agent.move(new Point(x,y), a, numOfRows, numOfColumns);
             
             
             int reward = returnReward(nextState);
@@ -154,8 +194,8 @@ class Gridworld{
     for(int y = 0; y< numOfRows; y++){      
       for(int x = 0; x < numOfColumns; x++){
       
-        System.out.println("\n");
-        System.out.println("state x = " + x + ", y = " + y);
+        //System.out.println("\n");
+        //System.out.println("state x = " + x + ", y = " + y);
         
         GridSpot state = grid[y][x];
         Point statePoint = new Point(x,y);
@@ -164,30 +204,30 @@ class Gridworld{
           ArrayList<Double> possible_v = new ArrayList<>();
 
           for(Point a : actionList){
-            System.out.print("action: ");
-            System.out.println(a);
+            //System.out.print("action: ");
+            //System.out.println(a);
             Point nextState = new Point();
-            nextState = agent.move(statePoint, a, numOfColumns, numOfRows);
+            nextState = agent.move(statePoint, a, numOfRows, numOfColumns);
             
-            System.out.print("next state: ");
-            System.out.println(nextState);
+            //System.out.print("next state: ");
+            //System.out.println(nextState);
             
             int reward = returnReward(nextState);
-            System.out.print("reward: ");
-            System.out.println(reward);
+            //System.out.print("reward: ");
+            //System.out.println(reward);
 
             
             double v = reward + gamma * grid[nextState.y][nextState.x].value;
-            System.out.print("value: ");
-            System.out.println(v);
+            //System.out.print("value: ");
+            //System.out.println(v);
 
             possible_v.add(v);
             
           }
           double max_v = Collections.max(possible_v);
           int index = possible_v.indexOf(max_v);
-          System.out.println(possible_v);
-          System.out.println(max_v);
+          //System.out.println(possible_v);
+          //System.out.println(max_v);
           state.action = actionList[index];
           state.actionChar = actionCharArr[index];
         }
@@ -196,28 +236,31 @@ class Gridworld{
     }
   }
 
-  void test(){
-    char[] actionCharArr = {'D', 'U', 'R','L'};
-    System.out.println("\n");
-    System.out.println("state x = " + 1 + ", y = " + 3);
-    Point statePoint = new Point(1,3);
-    for(Point a : actionList){
-            System.out.print("action: ");
-            System.out.println(a);
-            Point nextState = new Point();
-            nextState = agent.move(statePoint, a, numOfColumns, numOfRows);
-            
-            System.out.print("next state: ");
-            System.out.println(nextState);
+  boolean isPossible(){
+    boolean solvingMaze = true;
+    boolean isPossible = false;
+    agent.position = startPos;
+    int count = 0;
+    while(solvingMaze){
       
-            int reward = returnReward(nextState);
-            System.out.print("reward: ");
-            System.out.println(reward);
+      count++;
+      
+      Point action = grid[agent.position.y][agent.position.x].action;
 
-            double v = reward + gamma * grid[nextState.y][nextState.x].value;
-            System.out.print("value: ");
-            System.out.println(v);
+      agent.position = agent.move(agent.position, action, numOfRows, numOfColumns);
+
+
+      if(agent.position.equals(goal)){
+        isPossible = true;
+        break;
+      }
+      else if(count > 40){
+        isPossible = false;
+        solvingMaze = false;
+      }
+     
     }
+    return isPossible;
   }
 
   

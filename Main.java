@@ -5,7 +5,8 @@ import java.util.Arrays;
 class Main {
   public static void main(String[] args) {
     System.out.println("Hello world!");
-    Gridworld myGridworld = new Gridworld(4,4, new Point(0,0), new Point(1,2));
+    //vertical, horizontal
+    Gridworld myGridworld = new Gridworld(4,5, new Point(4,0), new Point(0,3), 1);
     //System.out.println(Arrays.deepToString(myGridworld.grid));
     
     //System.out.println(Arrays.toString(Gridworld.actionList()));
@@ -14,7 +15,9 @@ class Main {
     //myGridworld.printGridValues(); kjsd
     myGridworld.printActions();
     myGridworld.printGridValues();
-    GridSpot myGridSpot = new GridSpot();
+    Printer.printGridworld(myGridworld);
+    System.out.println(myGridworld.isPossible());
+    //GridSpot myGridSpot = new GridSpot();
   
 
     /*
