@@ -39,13 +39,6 @@ class Gridworld{
       }
     }
     numOfBlackHoles = numBlackHoles;
-    /*for (int k = 0; k<numOfBlackHoles; k++){
-      grid[2][2].entity = 'b';
-    }*/
-    grid[0][0].entity = 'b';
-    grid[1][1].entity = 'b';
-    grid[2][2].entity = 'b';
-    grid[3][3].entity = 'b';
     
     
     agent = new Agent();
@@ -53,16 +46,18 @@ class Gridworld{
   
 
   //METHODS
-  /*int askUser(int lower limit, int upper limit, String question){
-    System.out.println(question);
-    
-  }*/
+  
   //temp
-  /*void setBlackHoleLocation(int x, int y){
-    if(grid[y][x].entity != null){
+  boolean setBlackHoleLocation(int x, int y){
+    if(grid[y][x].entity == ' '){
       //set the location
+      grid[y][x].entity = 'b';
+      return true;
     }
-  }*/
+    else{
+      return false;
+    }
+  }
   void printGridValues(){
     double[][] gridValues;
     gridValues = new double[numOfRows][numOfColumns];

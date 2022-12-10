@@ -6,4 +6,7 @@ class Printer{
     //g.grid.agent.
     g.printEntities();
   }
+  static void printBlankGrid(){
+    
+  }
 }

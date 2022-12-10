@@ -7,7 +7,7 @@ class Main {
   public static void main(String[] args) {
     System.out.println("Hello world!");
     //vertical, horizontal
-    Gridworld myGridworld = new Gridworld(4,5, new Point(4,0), new Point(0,3), 1);
+    /*Gridworld myGridworld = new Gridworld(4,5, new Point(4,0), new Point(0,3), 1);
     //System.out.println(Arrays.deepToString(myGridworld.grid));
     
     //System.out.println(Arrays.toString(Gridworld.actionList()));
@@ -17,7 +17,7 @@ class Main {
     myGridworld.printActions();
     myGridworld.printGridValues();
     Printer.printGridworld(myGridworld);
-    System.out.println(myGridworld.isPossible());
+    System.out.println(myGridworld.isPossible());*/
     //GridSpot myGridSpot = new GridSpot();
     String question = "Choose the height (vertical length) of your gridworld (3-10)";
     int height = askUser(3, 10,question);
@@ -30,8 +30,66 @@ class Main {
 
     question = "Choose the starting Y coordinate for your agent (0-" + (height-1) + ")";
     int startY = askUser(0, height-1,question);
-  
+    
+   
+    boolean isValid = false;
+    int endX = 0;
+    int endY = 0;
 
+    while(!isValid){
+      question = "Choose the ending X coordinate for your agent (0-" + (width-1) + ")";
+      endX = askUser(0, width-1,question);
+
+      question = "Choose the ending Y coordinate for your agent (0-" + (height-1) + ")";
+      endY = askUser(0, height-1,question);
+      if(startX == endX && startY == endY){
+        System.out.println("Invalid. Please make sure your ending coordinates are different from the starting coordinates.");
+      }
+      else{
+        System.out.println("WOOO");
+        isValid = true;
+      }
+    }
+    
+    Point start = new Point(startX, startY);
+    Point end = new Point (endX, endY);
+
+    //ask for number of blackholes
+    question = "How many blackholes would you like in this environment? (0-" + ((width*height)-2) + ")";
+    int numBlackHoles = askUser(0, (width*height)-2,question);
+
+    Gridworld gridworld = new Gridworld(height,width, start, end, numBlackHoles);
+    
+    for(int i = 0; i<numBlackHoles; i++){
+      boolean isSet = false;
+      while(!isSet){
+        question = "Choose the X coordinate for blackhole #" + (i+1) +  " (0-" + (width-1) + ")";
+        int bhX = askUser(0, width-1,question);
+  
+        question = "Choose the Y coordinate for blackhole #" + (i+1) +  " (0-" + (height-1) + ")";
+        int bhY = askUser(0, height-1,question);
+          
+        if(!gridworld.setBlackHoleLocation(bhX, bhY)){
+          System.out.println("Invalid. Please make sure the black hole isn't in a starting or ending coordinate!");
+        }
+        else{
+          System.out.println("Blackhole set!");
+          isSet = true;
+        }
+      }
+    }
+
+    gridworld.solve();
+    if(gridworld.isPossible()){
+      gridworld.printActions();
+      gridworld.printGridValues();
+    }
+    else{
+      System.out.println("I'm afraid this gridworld is not solvable!");
+    }
+    
+    Printer.printGridworld(gridworld);
+    
     /*
     Agent myAgent = new Agent();
     System.out.println(myAgent.move(new Point(2,3), new Point(0,1), 4, 4));
@@ -64,6 +122,8 @@ class Main {
     return number;
     
   }
+  
+
   
   
 }
