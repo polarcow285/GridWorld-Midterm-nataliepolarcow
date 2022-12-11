@@ -4,14 +4,15 @@ import java.awt.*;
 
 //class representing a square
 class GridSpot{
-  char entity;
+  String entity;
   double value;
   Point action;
-  char actionChar;
+  String actionDisplay;
 
   public GridSpot(){
     value = 0;
-    entity = ' ';
+    entity = "__|";
+    actionDisplay = "  |";
   }
   
  

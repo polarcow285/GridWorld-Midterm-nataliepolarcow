@@ -9,9 +9,9 @@ class Gridworld{
   
   final int numOfRows; //height  of gridworld
   final int numOfColumns; //width of gridworld  
-  private final Point startPos; //starting coordinate of the agent
-  final Point goal; //ending coordinate of the agent
-  final int numOfBlackHoles; //number of black holes in the grid
+  Point startPos; //starting coordinate of the agent
+  Point goal; //ending coordinate of the agent
+  
   GridSpot[][] grid; //2d array that represents grid
   final static double gamma = 0.9; //constant that represents how much the calculations should care about future rewards
   
@@ -20,25 +20,19 @@ class Gridworld{
 
 
   //The constructor initializes a 2d array with the starting position, ending position, and black hole locations in the grid
-  public Gridworld(int height, int width, int numBlackHoles){   
+  public Gridworld(int height, int width){   
     numOfRows = height;
     numOfColumns = width;
     
     grid = new GridSpot[height][width];
     //for each 
-    /*for(int i = 0; i< height; i++){
+    for(int i = 0; i< height; i++){
       for(int j = 0; j < width; j++){
         grid[i][j] = new GridSpot();
-        if(i == end.y && j == end.x){
-          grid[i][j].entity = 'e';
-        }
-        else if(i == start.y && j == start.x){
-          grid[i][j].entity = 's';
-        }
       }
     }
-    numOfBlackHoles = numBlackHoles;
-    */
+    //numOfBlackHoles = numBlackHoles;
+    
     
     agent = new Agent();
   }
@@ -47,78 +41,38 @@ class Gridworld{
   //METHODS
   public void setStartLocation(Point start){
     startPos = start;
-    grid[start.y][start.x] = 's';
+    grid[start.y][start.x].entity = "s |";
   }
   public void setEndLocation(Point end){
     goal = end;
-    grid[start.y][start.x] = 'e';
+    grid[end.y][end.x].entity = "e |";
   }
-  public void setNumBlackHoles(int num){
-    numOfBlackHoles = num;
 
-  }
   
   //temp
   boolean setBlackHoleLocation(int x, int y){
-    if(grid[y][x].entity == ' '){
+    if(grid[y][x].entity.equals("__|")){
       //set the location
-      grid[y][x].entity = 'b';
+      grid[y][x].entity = "b |";
       return true;
     }
     else{
       return false;
     }
   }
-  void printGridValues(){
-    double[][] gridValues;
-    gridValues = new double[numOfRows][numOfColumns];
-    for(int i = 0; i< numOfRows; i++){
-      for(int j = 0; j < numOfColumns; j++){
-        gridValues[i][j] = grid[i][j].value;
-      }
-    }
-    String strWithOuterBrackets = Arrays.deepToString(gridValues).replace("], ", "]\n");    
-    System.out.println(strWithOuterBrackets.substring(1, strWithOuterBrackets.length()-1));
-
-  }
-  void printActions(){
-    char[][] gridActions;
-    
-    gridActions = new char[numOfRows][numOfColumns];
-    for(int i = 0; i< numOfRows; i++){
-      for(int j = 0; j < numOfColumns; j++){
-       
-        gridActions[i][j] = grid[i][j].actionChar;
-      }
-    }
-    String strWithOuterBrackets = Arrays.deepToString(gridActions).replace("], ", "]\n");    
-    System.out.println(strWithOuterBrackets.substring(1, strWithOuterBrackets.length()-1));
-
-  }
-  void printEntities(){
-    char[][] gridEntities;
-    
-    gridEntities = new char[numOfRows][numOfColumns];
-    for(int i = 0; i< numOfRows; i++){
-      for(int j = 0; j < numOfColumns; j++){
-       
-        gridEntities[i][j] = grid[i][j].entity;
-      }
-    }
-    String strWithOuterBrackets = Arrays.deepToString(gridEntities).replace("], ", "]\n");    
-    System.out.println(strWithOuterBrackets.substring(1, strWithOuterBrackets.length()-1));
-
-  }
+  
+  
+  
 
   //calculates the reward for hypothetically being in a certain state
   int returnReward(Point nextState){
     GridSpot nextStateSpot = grid[nextState.y][nextState.x];
     //if next state == ending position, then reward is 10
-    if(nextStateSpot.entity == 'e'){
+    if(nextStateSpot.entity.equals("e |")){
       return 10;
     }
     //if next state == black hole, then reward is -10
-    else if(nextStateSpot.entity == 'b'){
+    else if(nextStateSpot.entity.equals("b |")){
       return -10;
     }
     else{
@@ -129,7 +83,7 @@ class Gridworld{
 
   //checks whether a state is a black hole the ending position
   boolean isTerminal(GridSpot state){
-    if(state.entity == 'b' || state.entity == 'e'){
+    if(state.entity.equals("b |") || state.entity.equals("e |")){
       return true;
     }
     else{
@@ -151,7 +105,7 @@ class Gridworld{
       }
       
     }
-    System.out.println("made it!");
+    
 
     //calculates best actions to take at each square
     calculateBestActions();
@@ -201,7 +155,10 @@ class Gridworld{
   }
 
   void calculateBestActions(){
-    char[] actionCharArr = {'D', 'U', 'R','L'};
+    //←↑→↓
+    //char[] actionCharArr = {'D', 'U', 'R','L'};
+    String[] actionDisplayArr = {"↓ |", "↑ |", "→ |","← |"};
+    
     for(int y = 0; y< numOfRows; y++){      
       for(int x = 0; x < numOfColumns; x++){
       
@@ -240,7 +197,7 @@ class Gridworld{
           //System.out.println(possible_v);
           //System.out.println(max_v);
           state.action = actionList[index];
-          state.actionChar = actionCharArr[index];
+          state.actionDisplay = actionDisplayArr[index];
         }
       }
        
@@ -265,7 +222,7 @@ class Gridworld{
         isPossible = true;
         break;
       }
-      else if(count > 40){
+      else if(count > 100){
         isPossible = false;
         solvingMaze = false;
       }

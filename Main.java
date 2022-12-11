@@ -5,7 +5,11 @@ import java.util.*;
 
 class Main {
   public static void main(String[] args) {
-    System.out.println("Hello world!");
+    System.out.println("Welcome to Gridworld Simulator!");
+    System.out.println("\n");
+    System.out.println("In gridworld, Dr. Frewen needs to figure out the best path from point A to point B in a grid. There might be blackholes in the grid that he needs to avoid.");
+    System.out.println("Create your custom gridworld now!");
+    System.out.println("\n");
     //vertical, horizontal
     /*Gridworld myGridworld = new Gridworld(4,5, new Point(4,0), new Point(0,3), 1);
     //System.out.println(Arrays.deepToString(myGridworld.grid));
@@ -25,23 +29,26 @@ class Main {
     question = "Choose the width (horizontal length) of your gridworld (3-10)";
     int width = askUser(3, 10,question);
     //display gridworld size
+    Gridworld gridworld = new Gridworld(height,width);
 
     System.out.println("\n");
     System.out.println("This is what the grid world looks like!");
-    Printer.printBlankGrid(height, width);
+    Printer.printGrid(gridworld);
     
     System.out.println("\n");
-    question = "Choose the starting X coordinate for your agent (0-" + (width-1) + ")";
+    question = "Choose the starting X coordinate for Dr. Frewen (0-" + (width-1) + ")";
     int startX = askUser(0, width-1,question);
 
-    question = "Choose the starting Y coordinate for your agent (0-" + (height-1) + ")";
+    question = "Choose the starting Y coordinate for Dr. Frewen (0-" + (height-1) + ")";
     int startY = askUser(0, height-1,question);
     Point start = new Point(startX, startY);
 
+    gridworld.setStartLocation(start);
     System.out.println("\n");
-    System.out.println("This is where the agent is!");
+    System.out.println("This is where Dr. Frewen is!");
     
-    Printer.printAgent(height, width, start);
+    //Printer.printAgent(height, width, start);
+    Printer.printGrid(gridworld);
     
     
     
@@ -52,10 +59,10 @@ class Main {
     int endY = 0;
 
     while(!isValid){
-      question = "Choose the ending X coordinate for your agent (0-" + (width-1) + ")";
+      question = "Choose the ending X coordinate for Dr. Frewen (0-" + (width-1) + ")";
       endX = askUser(0, width-1,question);
 
-      question = "Choose the ending Y coordinate for your agent (0-" + (height-1) + ")";
+      question = "Choose the ending Y coordinate for Dr. Frewen (0-" + (height-1) + ")";
       endY = askUser(0, height-1,question);
       if(startX == endX && startY == endY){
         System.out.println("Invalid. Please make sure your ending coordinates are different from the starting coordinates.");
@@ -68,12 +75,20 @@ class Main {
     
     
     Point end = new Point (endX, endY);
+    gridworld.setEndLocation(end);
+    System.out.println("\n");
+    System.out.println("This is where Dr. Frewen should end!");
+    
+    Printer.printGrid(gridworld);
 
     //ask for number of blackholes
+    System.out.println("\n");
     question = "How many blackholes would you like in this environment? (0-" + ((width*height)-2) + ")";
+    
     int numBlackHoles = askUser(0, (width*height)-2,question);
+    //gridworld.setNumBlackHoles(numBlackHoles);
 
-    Gridworld gridworld = new Gridworld(height,width, start, end, numBlackHoles);
+    
     
     for(int i = 0; i<numBlackHoles; i++){
       boolean isSet = false;
@@ -88,7 +103,10 @@ class Main {
           System.out.println("Invalid. Please make sure the black hole isn't in a starting or ending coordinate!");
         }
         else{
+          System.out.println("\n");
           System.out.println("Blackhole set!");
+          Printer.printGrid(gridworld);
+          System.out.println("\n");
           isSet = true;
         }
       }
@@ -96,14 +114,16 @@ class Main {
 
     gridworld.solve();
     if(gridworld.isPossible()){
-      gridworld.printActions();
-      gridworld.printGridValues();
+      //Printer.printActions(gridworld);
+      //gridworld.printActions();
+      //Printer.printValues(gridworld);
+      System.out.println("Here's the path that Dr. Frewen should take!");
+      Printer.printAgent(gridworld);
     }
     else{
-      System.out.println("I'm afraid this gridworld is not solvable!");
+      System.out.println("I'm afraid this gridworld is not solvable! Dr. Frewen is stuck in this grid forever :(");
     }
     
-    Printer.printGridworld(gridworld);
     
     /*
     Agent myAgent = new Agent();
@@ -131,6 +151,7 @@ class Main {
         consoleInput.nextLine();
       }
       System.out.println("That's not a valid input, please try again!");
+      System.out.println(question);
     }
     
 
