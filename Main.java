@@ -25,11 +25,26 @@ class Main {
     question = "Choose the width (horizontal length) of your gridworld (3-10)";
     int width = askUser(3, 10,question);
     //display gridworld size
+
+    System.out.println("\n");
+    System.out.println("This is what the grid world looks like!");
+    Printer.printBlankGrid(height, width);
+    
+    System.out.println("\n");
     question = "Choose the starting X coordinate for your agent (0-" + (width-1) + ")";
     int startX = askUser(0, width-1,question);
 
     question = "Choose the starting Y coordinate for your agent (0-" + (height-1) + ")";
     int startY = askUser(0, height-1,question);
+    Point start = new Point(startX, startY);
+
+    System.out.println("\n");
+    System.out.println("This is where the agent is!");
+    
+    Printer.printAgent(height, width, start);
+    
+    
+    
     
    
     boolean isValid = false;
@@ -51,7 +66,7 @@ class Main {
       }
     }
     
-    Point start = new Point(startX, startY);
+    
     Point end = new Point (endX, endY);
 
     //ask for number of blackholes

@@ -9,7 +9,7 @@ class Gridworld{
   
   final int numOfRows; //height  of gridworld
   final int numOfColumns; //width of gridworld  
-  final Point startPos; //starting coordinate of the agent
+  private final Point startPos; //starting coordinate of the agent
   final Point goal; //ending coordinate of the agent
   final int numOfBlackHoles; //number of black holes in the grid
   GridSpot[][] grid; //2d array that represents grid
@@ -20,14 +20,13 @@ class Gridworld{
 
 
   //The constructor initializes a 2d array with the starting position, ending position, and black hole locations in the grid
-  public Gridworld(int height, int width, Point start, Point end, int numBlackHoles){   
+  public Gridworld(int height, int width, int numBlackHoles){   
     numOfRows = height;
     numOfColumns = width;
-    startPos = start;
-    goal = end;
+    
     grid = new GridSpot[height][width];
     //for each 
-    for(int i = 0; i< height; i++){
+    /*for(int i = 0; i< height; i++){
       for(int j = 0; j < width; j++){
         grid[i][j] = new GridSpot();
         if(i == end.y && j == end.x){
@@ -39,13 +38,25 @@ class Gridworld{
       }
     }
     numOfBlackHoles = numBlackHoles;
-    
+    */
     
     agent = new Agent();
   }
   
 
   //METHODS
+  public void setStartLocation(Point start){
+    startPos = start;
+    grid[start.y][start.x] = 's';
+  }
+  public void setEndLocation(Point end){
+    goal = end;
+    grid[start.y][start.x] = 'e';
+  }
+  public void setNumBlackHoles(int num){
+    numOfBlackHoles = num;
+
+  }
   
   //temp
   boolean setBlackHoleLocation(int x, int y){
