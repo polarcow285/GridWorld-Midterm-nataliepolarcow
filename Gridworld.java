@@ -11,7 +11,7 @@ class Gridworld{
   final int numOfColumns; //width of gridworld  
   Point startPos; //starting coordinate of the agent
   Point goal; //ending coordinate of the agent
-  
+  int numOfBlackHoles;
   GridSpot[][] grid; //2d array that represents grid
   final static double gamma = 0.9; //constant that represents how much the calculations should care about future rewards
   
@@ -19,7 +19,7 @@ class Gridworld{
   Agent agent; //the agent is navigating through this gridworld
 
 
-  //The constructor initializes a 2d array with the starting position, ending position, and black hole locations in the grid
+  //The constructor initializes a 2d array with the starting position, ending position
   public Gridworld(int height, int width){   
     numOfRows = height;
     numOfColumns = width;
@@ -46,6 +46,9 @@ class Gridworld{
   public void setEndLocation(Point end){
     goal = end;
     grid[end.y][end.x].entity = "e |";
+  }
+  public void setNumBlackHoles(int num){
+    numOfBlackHoles = num;
   }
 
   
@@ -203,7 +206,7 @@ class Gridworld{
        
     }
   }
-
+  //Checks whether the gridworld is solvable or not
   boolean isPossible(){
     boolean solvingMaze = true;
     boolean isPossible = false;

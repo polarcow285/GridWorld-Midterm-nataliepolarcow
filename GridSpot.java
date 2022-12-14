@@ -2,7 +2,7 @@
 import java.awt.*;
 
 
-//class representing a square
+//class representing a square in the grid
 class GridSpot{
   String entity;
   double value;

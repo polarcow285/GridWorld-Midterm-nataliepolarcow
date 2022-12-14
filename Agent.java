@@ -1,8 +1,12 @@
 import java.awt.*;
+
+//represents Dr. Frewen navigating the grid
 class Agent{
   Point position;
   final String display = "o";
 
+  
+  //method that returns x,y coordinate from taking action 'action' from state 'state'
   Point move(Point state, Point action, int length, int width){
     int x = state.x + action.x;
     int y = state.y + action.y; 
