@@ -51,8 +51,19 @@ class Runner{
     question = "\nHow many blackholes would you like in this environment? (0-" + ((width*height)-2) + ")";    
     int numBlackHoles = askUser(0, (width*height)-2,question);
     gridworld.setNumBlackHoles(numBlackHoles);
+
     
-    manuallySetBlackHoles(gridworld);
+    //prompts the user to decide whether they want to manually input the location of blackholes or randomly generate them 
+    question = ("\n Would you like to manually input the locations of the blackholes on the grid or randomly generate them? \n1: manual input \n2: randomly generate");
+    int response = askUser(1, 2,question);
+    
+    if(response == 1){
+      manuallySetBlackHoles(gridworld);
+    }
+    else{
+      randomlySetBlackHoles(gridworld);
+    }
+    
       
     //solving the gridworld
     gridworld.solve();
@@ -66,33 +77,30 @@ class Runner{
     else{
       System.out.println("I'm afraid this gridworld is not solvable! Dr. Frewen is stuck in this grid forever :(");
     }
+
+    System.out.println("\nSimulation complete!");
   }
 
+  //randomly sets the locations of blackholes
   static void randomlySetBlackHoles(Gridworld g){
     for(int i = 0; i<g.numOfBlackHoles; i++){
       boolean isSet = false;
       while(!isSet){
-        int randomNumber = (int) (Math.random() * 10 + 1);
-        
-        int bhX = askUser(0, g.numOfColumns-1,question);
-  
-        int bhY = askUser(0, g.numOfRows-1,question);
+        int randomX = (int) (Math.random() * (g.numOfColumns));
+        int randomY = (int) (Math.random() * (g.numOfRows));
           
-        if(!g.setBlackHoleLocation(bhX, bhY)){
-          System.out.println("Invalid. Please make sure the black hole is in an empty square!");
-        }
-        else{
-          System.out.println("\nBlackhole set!");
-          Printer.printGrid(g);
-          System.out.println("\n");
+        if(g.setBlackHoleLocation(randomX, randomY)){
           isSet = true;
         }
+       
       }
     }
+    System.out.println("\nBlackholes randomly generated!");
+    Printer.printGrid(g);
   }
 
 
-  
+  //prompts the user to manually set the locations of the blackholes
   static void manuallySetBlackHoles(Gridworld g){
     for(int i = 0; i<g.numOfBlackHoles; i++){
       boolean isSet = false;
@@ -102,7 +110,8 @@ class Runner{
   
         question = "Choose the Y (vertical) coordinate for blackhole #" + (i+1) +  " (0-" + (g.numOfRows-1) + ")";
         int bhY = askUser(0, g.numOfRows-1,question);
-          
+        
+        //checks whether the blackhole location is in an empty square
         if(!g.setBlackHoleLocation(bhX, bhY)){
           System.out.println("Invalid. Please make sure the black hole is in an empty square!");
         }
@@ -116,11 +125,12 @@ class Runner{
     }
   }
 
+  //sets the ending location of the gridworld
   static Point getEndingLocation(Gridworld g){
     boolean isValid = false;
     int endX = 0;
     int endY = 0;
-
+    
     while(!isValid){
       String question = "Choose the ending X (horizontal) coordinate for Dr. Frewen (0-" + (g.numOfColumns-1) + ")";
       endX = askUser(0, g.numOfColumns-1,question);
@@ -140,7 +150,7 @@ class Runner{
     return new Point (endX, endY);
   }
 
-  
+  //prints the introduction text
   static void printIntroText(){
     System.out.println("Welcome to Gridworld Simulator!");
     System.out.println("\n");
@@ -148,6 +158,8 @@ class Runner{
     System.out.println("Create your custom gridworld now!");
     System.out.println("\n");
   }
+
+  //method that asks the user a question and the input has to be an integer between an upper and lower limit
   static int askUser(int lowerLimit, int upperLimit, String question){
     System.out.println(question);
     Scanner consoleInput = new Scanner(System.in);
@@ -155,8 +167,10 @@ class Runner{
     int number = -1;
 
     while(!isValidNumber){
+      //ensures that input is an integer
       if(consoleInput.hasNextInt()){
         number = consoleInput.nextInt();
+        //ensures that input is between bounds
         if(number >= lowerLimit && number <= upperLimit){
           break;
         }

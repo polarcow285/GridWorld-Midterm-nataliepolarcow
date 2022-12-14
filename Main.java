@@ -1,10 +1,7 @@
 
 class Main {
   public static void main(String[] args) {
-   
-    Runner.runGridworld();
- 
-   
-  }
-  
+    //runs gridworld simulator
+    Runner.runGridworld();  
+  } 
 }

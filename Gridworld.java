@@ -19,19 +19,19 @@ class Gridworld{
   Agent agent; //the agent is navigating through this gridworld
 
 
-  //The constructor initializes a 2d array with the starting position, ending position
+  //The constructor initializes a 2d array of Gridspots, the width and height of the gridworld, and an agent.
   public Gridworld(int height, int width){   
     numOfRows = height;
     numOfColumns = width;
     
     grid = new GridSpot[height][width];
-    //for each 
+    //initialize each element in 2d array grid to be a gridspot
     for(int i = 0; i< height; i++){
       for(int j = 0; j < width; j++){
         grid[i][j] = new GridSpot();
       }
     }
-    //numOfBlackHoles = numBlackHoles;
+ 
     
     
     agent = new Agent();
@@ -39,23 +39,29 @@ class Gridworld{
   
 
   //METHODS
+
+  //sets the starting location of the gridworld
   public void setStartLocation(Point start){
     startPos = start;
     grid[start.y][start.x].entity = "s |";
   }
+
+  //sets the ending location of the gridworld
   public void setEndLocation(Point end){
     goal = end;
     grid[end.y][end.x].entity = "e |";
   }
+
+  //sets the number of blackholes in the gridworld
   public void setNumBlackHoles(int num){
     numOfBlackHoles = num;
   }
 
   
-  //temp
+  //checks whether the gridspot can be filled with a blackhole
   boolean setBlackHoleLocation(int x, int y){
     if(grid[y][x].entity.equals("__|")){
-      //set the location
+      //set the location of the blackhole
       grid[y][x].entity = "b |";
       return true;
     }
@@ -84,7 +90,7 @@ class Gridworld{
     
   }
 
-  //checks whether a state is a black hole the ending position
+  //checks whether a state is 'terminal' - whether it is a black hole or ending position
   boolean isTerminal(GridSpot state){
     if(state.entity.equals("b |") || state.entity.equals("e |")){
       return true;
@@ -108,16 +114,13 @@ class Gridworld{
       }
       
     }
-    
-
     //calculates best actions to take at each square
     calculateBestActions();
-    //test();
     
     
   }
 
-  //calculates each square's value (numbe that represents how good the square is)
+  //calculates each square's value (number that represents how good the square is). returns delta, a value that determines whether calculations have converged
   double calculateValues(){
     double delta = 0.0;
     //iterate through each gridspot on the grid
@@ -131,22 +134,31 @@ class Gridworld{
 
           //store the old value of the state
           double old_v = state.value;
-          
+
+          //calculate the possibles value of 'state' by iterating through each action
           for(Point a : actionList){
+
+            //calculate nextState, which is the xy coordinate from taking action a in 'state'
             Point nextState = new Point();
             nextState = agent.move(new Point(x,y), a, numOfRows, numOfColumns);
             
-            
+            //reward for being in nextState
             int reward = returnReward(nextState);
 
+            //calculate the value
+            //value = reward + gamma * nextState.value
             double v = reward + gamma * grid[nextState.y][nextState.x].value;
+
+            //store possible values into a list
             possible_v.add(v);
                         
           }
-          
+
+          //store the largest value of the list and set it as the value of the gridspot
           double max_v = Collections.max(possible_v);
           state.value = max_v;
-          
+
+          //calculates delta (change in calculations in each iteration)
           if(delta < (state.value - old_v)){
             delta = state.value - old_v;
           }
@@ -157,48 +169,46 @@ class Gridworld{
     return delta;
   }
 
+  //calculates the best actions to take for each square
   void calculateBestActions(){
     //←↑→↓
     //char[] actionCharArr = {'D', 'U', 'R','L'};
     String[] actionDisplayArr = {"↓ |", "↑ |", "→ |","← |"};
-    
+
+    //iterates through each gridspot
     for(int y = 0; y< numOfRows; y++){      
       for(int x = 0; x < numOfColumns; x++){
-      
-        //System.out.println("\n");
-        //System.out.println("state x = " + x + ", y = " + y);
         
         GridSpot state = grid[y][x];
         Point statePoint = new Point(x,y);
+        
         if(!isTerminal(state)){
            //initialize possible v list
           ArrayList<Double> possible_v = new ArrayList<>();
 
+          //calculate the possibles value of 'state' by iterating through each action
           for(Point a : actionList){
-            //System.out.print("action: ");
-            //System.out.println(a);
+
+            //calculate nextState, which is the xy coordinate from taking action a in 'state'
             Point nextState = new Point();
-            nextState = agent.move(statePoint, a, numOfRows, numOfColumns);
-            
-            //System.out.print("next state: ");
-            //System.out.println(nextState);
-            
+            nextState = agent.move(statePoint, a, numOfRows, numOfColumns);          
+
+            //reward for being in nextState
             int reward = returnReward(nextState);
-            //System.out.print("reward: ");
-            //System.out.println(reward);
-
-            
+           
+            //calculate the value
+            //value = reward + gamma * nextState.value
             double v = reward + gamma * grid[nextState.y][nextState.x].value;
-            //System.out.print("value: ");
-            //System.out.println(v);
-
+            
+            //store possible values into a list
             possible_v.add(v);
             
           }
+
+          //store the largest value of the list and set it as the value of the gridspot
           double max_v = Collections.max(possible_v);
+          //find the action that corresponds to the largest value in the list 
           int index = possible_v.indexOf(max_v);
-          //System.out.println(possible_v);
-          //System.out.println(max_v);
           state.action = actionList[index];
           state.actionDisplay = actionDisplayArr[index];
         }
@@ -212,19 +222,20 @@ class Gridworld{
     boolean isPossible = false;
     agent.position = startPos;
     int count = 0;
+    
     while(solvingMaze){
       
       count++;
-      
+      //moves the agent according to the already-calculated actions in the gridspots
       Point action = grid[agent.position.y][agent.position.x].action;
-
       agent.position = agent.move(agent.position, action, numOfRows, numOfColumns);
 
-
+      //if the agent has reached the ending position, then the gridworld is solvable
       if(agent.position.equals(goal)){
         isPossible = true;
         break;
       }
+      //if the agent has surpassed 100 moves, the gridworld is deemed unsolvable
       else if(count > 100){
         isPossible = false;
         solvingMaze = false;
