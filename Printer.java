@@ -6,14 +6,6 @@ class Printer{
   //prints the agent's final path to the destination
   static void printAgent(Gridworld g){
    
-
-    //https://stackoverflow.com/questions/26475775/how-to-display-row-and-column-number-in-2d-array
-    
-    /*for(int i = 0; i< vertical; i++){
-      for(int j = 0; j < horizontal; j++){      
-        grid[i][j] = "' '";
-      }
-    }*/
     
     boolean hasReachedGoal = false;
     
@@ -32,7 +24,8 @@ class Printer{
       }
     }
 
-    //printing the grid + agent's path with the rows and columns 
+    //printing the grid + agent's path with the rows and columns labeled
+     //credit from https://stackoverflow.com/questions/26475775/how-to-display-row-and-column-number-in-2d-array
     System.out.printf("%-3s", "");
     for (int i = 0; i < g.numOfColumns; i++) {
       System.out.printf("%-3d", i);
@@ -48,18 +41,14 @@ class Printer{
     }
   
   }
-  
+  //prints the grid/visually displays gridworld
   static void printGrid(Gridworld g){
 
     //https://stackoverflow.com/questions/26475775/how-to-display-row-and-column-number-in-2d-array
     
-    /*for(int i = 0; i< vertical; i++){
-      for(int j = 0; j < horizontal; j++){      
-        grid[i][j] = "' '";
-      }
-    }*/
 
     //prints the grid with headers and rows labeled
+    //credit from https://stackoverflow.com/questions/26475775/how-to-display-row-and-column-number-in-2d-array
     System.out.printf("%-3s", "");
     for (int i = 0; i < g.numOfColumns; i++) {
       System.out.printf("%-3d", i);
@@ -74,17 +63,11 @@ class Printer{
     }
   
   }
-  //prints the actions in all the squares
+  //prints the actions in all the squares, used for testing only
   static void printActions(Gridworld g){
 
-    //https://stackoverflow.com/questions/26475775/how-to-display-row-and-column-number-in-2d-array
-    
-    /*for(int i = 0; i< vertical; i++){
-      for(int j = 0; j < horizontal; j++){      
-        grid[i][j] = "' '";
-      }
-    }*/
-
+    //prints the grid with headers and rows labeled
+    //credit from https://stackoverflow.com/questions/26475775/how-to-display-row-and-column-number-in-2d-array
     System.out.printf("%-3s", "");
     for (int i = 0; i < g.numOfColumns; i++) {
       System.out.printf("%-3d", i);
@@ -100,17 +83,10 @@ class Printer{
   
   }
 
-  //prints all the values in all the squares
-  static void printValues(Gridworld g){
-
-    //https://stackoverflow.com/questions/26475775/how-to-display-row-and-column-number-in-2d-array
-    
-    /*for(int i = 0; i< vertical; i++){
-      for(int j = 0; j < horizontal; j++){      
-        grid[i][j] = "' '";
-      }
-    }*/
-
+  //prints all the values in all the squares, used for testing only
+  static void printValues(Gridworld g){  
+    //prints the grid with headers and rows labeled
+    //credit from https://stackoverflow.com/questions/26475775/how-to-display-row-and-column-number-in-2d-array
     double[][] gridValues;
     gridValues = new double[g.numOfRows][g.numOfColumns];
     for(int i = 0; i< g.numOfRows; i++){

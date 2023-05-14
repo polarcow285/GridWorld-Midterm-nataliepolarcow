@@ -7,17 +7,30 @@ import java.awt.*;
 //The Gridworld class holds a blueprint for the gridworld environment that the agent navigates through.
 class Gridworld{
   
-  final int numOfRows; //height  of gridworld
-  final int numOfColumns; //width of gridworld  
-  Point startPos; //starting coordinate of the agent
-  Point goal; //ending coordinate of the agent
-  int numOfBlackHoles;
-  GridSpot[][] grid; //2d array that represents grid
-  final static double gamma = 0.9; //constant that represents how much the calculations should care about future rewards
+  //height of gridworld
+  final int numOfRows;
   
-  final static Point[] actionList = {new Point(0,1), new Point(0,-1), new Point(1,0), new Point(-1, 0)}; //list of actions that represent down, up, right, left
-  Agent agent; //the agent is navigating through this gridworld
+  //width of gridworld 
+  final int numOfColumns;  
 
+  //starting coordinate of the agent
+  Point startPos; 
+
+  //ending coordinate of the agent
+  Point goal; 
+
+  //number of blackholes in the gridworld
+  int numOfBlackHoles; 
+
+  //2d array that represents grid. This was something new that we did not cover in class. A 2d array is essentially an array of arrays. 
+  GridSpot[][] grid; 
+
+  //constant that represents how much the calculations should care about future rewards
+  final static double gamma = 0.9; 
+
+  //array of actions that represent down, up, right, left
+  final static Point[] actionList = {new Point(0,1), new Point(0,-1), new Point(1,0), new Point(-1, 0)}; 
+  Agent agent; //the agent is navigating through this gridworld
 
   //The constructor initializes a 2d array of Gridspots, the width and height of the gridworld, and an agent.
   public Gridworld(int height, int width){   
@@ -58,7 +71,7 @@ class Gridworld{
   }
 
   
-  //checks whether the gridspot can be filled with a blackhole
+  //checks whether the gridspot can be filled with a blackhole. if it can, the spot becomes a blackhole
   boolean setBlackHoleLocation(int x, int y){
     if(grid[y][x].entity.equals("__|")){
       //set the location of the blackhole
@@ -116,6 +129,12 @@ class Gridworld{
     }
     //calculates best actions to take at each square
     calculateBestActions();
+
+    //references from:
+    //https://hub.gke2.mybinder.org/user/whatithinkabout-babyrobot-y3zhu5py/lab/tree/Reinforcement_Learning/Part%203%20-%20Policy%20and%20Value%20Iteration.ipynb
+    //https://web.mit.edu/1.041/www/lectures/L15-value-iteration-2021fa-pre.pdf
+    //https://github.com/mbodenham/gridworld-value-iteration/blob/master/deterministic.py
+
     
     
   }
@@ -173,6 +192,7 @@ class Gridworld{
   void calculateBestActions(){
     //←↑→↓
     //char[] actionCharArr = {'D', 'U', 'R','L'};
+    //array that holds the display for each action
     String[] actionDisplayArr = {"↓ |", "↑ |", "→ |","← |"};
 
     //iterates through each gridspot

@@ -1,12 +1,14 @@
+//import that contains the Point class
 import java.awt.*;
 
 //represents Dr. Frewen navigating the grid
 class Agent{
+
+  //represents agent's xy position in grid
   Point position; 
-  //final String display = "o";
 
   
-  //method that returns x,y coordinate from taking an action (up, down, right, or left) in a starting xy coordinate
+  //method that returns x,y coordinate from taking an action (up, down, right, or left) from starting in an xy coordinate
   Point move(Point state, Point action, int length, int width){
     int x = state.x + action.x;
     int y = state.y + action.y; 
