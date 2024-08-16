@@ -15,6 +15,9 @@ The mathematical calculations for the above process are defined by repeatedly ap
 
 After calculating the values for all the grid spots, the best path is determined by following the grid spots with the highest values, which correspond to the best actions you can take at each step.
 
+The output is a printed grid with coordinates along the horizontal and vertical axis. ‘b’ represents blackholes, or obstacles. ‘e’ denotes the ending position, and the arrows indicate the best path the entity (my programming teacher) should take.
+![](readme_image.png)
+
 ## **Usage**
 This project was originally done on Repl.it, but it is now on JDoodle since it is no longer free to deploy projects on Repl.it. 
 I have noticed a random bugs with formatting and valid user inputs on JDoodle that were not apparent on Repl.it.
